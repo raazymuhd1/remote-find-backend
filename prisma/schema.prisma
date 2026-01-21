@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+model User {
+  id Int @id @default(autoincrement())
+  username String @default("John Cena")
+  email String @unique @default("johncena@gmail.com")
+  picture String @default("my image")
+  jobs Job[]
+}
+
+model JobDetail {
+   id Int @id @default(autoincrement())
+   location String @default("Jakarta")
+   position String @default("Remote")
+   type String @default("Fulltime")
+   salaryRange String @default("$1K")
+   job Job @relation(fields: [jobId], references: [id])
+   jobId Int
+}
+
+model Job {
+   id Int @id @default(autoincrement())
+   companyName String @default("Apple")
+   companyPicture String @default("company picture")
+   role String @default("Frontend Developer")
+   requirements String[] @default(["Familiar with ReactJs"])
+   responsibilities String[] @default(["Develop a modern UI"])
+   description String @default("Our company is the best")
+   createdAt DateTime @default(now())
+   details JobDetail
+   author User @relation(fields: [authorId], references: [id])
+   authorId Int 
+}
