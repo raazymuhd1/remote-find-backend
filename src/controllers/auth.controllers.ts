@@ -18,7 +18,7 @@ const signup = async(req: Request, res: Response) => {
         data: {
             username,
             email,
-            hashedPassword
+            password: hashedPassword
         }
     })
 
@@ -29,7 +29,27 @@ const signup = async(req: Request, res: Response) => {
 
 
 const signin = async(req: Request, res: Response) => {
-       const { username, email, password } = req.body;
+       const { email, password } = req.body;
+
+        if(!(email || password)) {
+            console.log(`missing required fields`)
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ data: null, msg: "missing required fields" })
+            return;
+         }
+
+         const user = await prisma.user.findFirst({
+            where: {
+                email,
+                password
+            }
+         })
+
+         if(!user) {
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ data: null, msg: "email or password didn't match" })
+            return;
+         }
+
+         res.status(StatusCodes.OK).json({ data: user, msg: "user authenticated", authenticated: true })
 }
 
 

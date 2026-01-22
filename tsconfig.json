@@ -13,6 +13,6 @@
     "allowSyntheticDefaultImports": true,       // Use `import express from "express"`
     "allowImportingTsExtensions": false,
   },
-  "include": ["src"],
+  "include": ["src", "generated/prisma"],
   "exclude": ["node_modules", "dist", ".env"]
 }

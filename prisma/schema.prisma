@@ -19,6 +19,7 @@ model User {
   id Int @id @default(autoincrement())
   username String @default("John Cena")
   email String @default("johncena@gmail.com")
+  password String 
   picture String @default("my image")
   jobs Job[]
 
