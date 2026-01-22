@@ -21,11 +21,15 @@ const signup = async(req: Request, res: Response) => {
             hashedPassword
         }
     })
+
+    console.log(`new user signed up`, user)
+    res.status(StatusCodes.OK).json({data: user, msg: "new user signed up"})
+    return;
 }
 
 
-const signin = async() => {
-
+const signin = async(req: Request, res: Response) => {
+       const { username, email, password } = req.body;
 }
 
 
