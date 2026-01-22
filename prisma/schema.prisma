@@ -11,15 +11,18 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  // url = "DATABASE_URL"
 }
 
 
 model User {
   id Int @id @default(autoincrement())
   username String @default("John Cena")
-  email String @unique @default("johncena@gmail.com")
+  email String @default("johncena@gmail.com")
   picture String @default("my image")
   jobs Job[]
+
+  @@unique([email])
 }
 
 model JobDetail {
@@ -29,7 +32,7 @@ model JobDetail {
    type String @default("Fulltime")
    salaryRange String @default("$1K")
    job Job @relation(fields: [jobId], references: [id])
-   jobId Int
+   jobId Int @unique
 }
 
 model Job {
@@ -37,11 +40,11 @@ model Job {
    companyName String @default("Apple")
    companyPicture String @default("company picture")
    role String @default("Frontend Developer")
-   requirements String[] @default(["Familiar with ReactJs"])
-   responsibilities String[] @default(["Develop a modern UI"])
+   requirements String[]
+   responsibilities String[]
    description String @default("Our company is the best")
    createdAt DateTime @default(now())
-   details JobDetail
+   detail JobDetail?
    author User @relation(fields: [authorId], references: [id])
-   authorId Int 
+   authorId Int @unique
 }
