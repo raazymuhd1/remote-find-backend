@@ -2,6 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import { prisma } from "../lib/prisma"
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs"
+import { generateToken } from "../helpers";
 
 const signup = async(req: Request, res: Response) => {
     const { username, email, password } = req.body;
@@ -22,8 +23,16 @@ const signup = async(req: Request, res: Response) => {
         }
     })
 
+    const token = generateToken({
+        userId: user.id,
+        username: user.username,
+        email: user.email
+    })
     console.log(`new user signed up`, user)
-    res.status(StatusCodes.OK).json({data: user, msg: "new user signed up"})
+    res.status(StatusCodes.OK).json({data: {
+        user,
+        token
+    }, msg: "new user signed up"})
     return;
 }
 
@@ -49,7 +58,16 @@ const signin = async(req: Request, res: Response) => {
             return;
          }
 
-         res.status(StatusCodes.OK).json({ data: user, msg: "user authenticated", authenticated: true })
+        //  signing a token
+        const token = jwt.sign({
+            userId: user.id,
+            email: user.email
+         }, process.env.JWT_SECRET as string)
+
+         res.status(StatusCodes.OK).json({ data: {
+            user,
+            token
+         }, msg: "user authenticated", authenticated: true })
 }
 
 

@@ -16,7 +16,7 @@ datasource db {
 
 
 model User {
-  id Int @id @default(autoincrement())
+  id Int @id @default(autoincrement()) @map("userId")
   username String @default("John Cena")
   email String @default("johncena@gmail.com")
   password String 
@@ -37,7 +37,7 @@ model JobDetail {
 }
 
 model Job {
-   id Int @id @default(autoincrement())
+   id Int @id @default(autoincrement()) @map("jobId")
    companyName String @default("Apple")
    companyPicture String @default("company picture")
    role String @default("Frontend Developer")
