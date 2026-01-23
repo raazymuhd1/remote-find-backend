@@ -59,10 +59,11 @@ const signin = async(req: Request, res: Response) => {
          }
 
         //  signing a token
-        const token = jwt.sign({
+        const token = generateToken({
             userId: user.id,
+            username: user.username,
             email: user.email
-         }, process.env.JWT_SECRET as string)
+         })
 
          res.status(StatusCodes.OK).json({ data: {
             user,
