@@ -1,6 +1,16 @@
 import jwt from "jsonwebtoken"
 import { JwtPayload } from "../types"
 
+enum Status {
+    Valid,
+    Invalid
+}
+
+type VerifyPayload = {
+    status: Status;
+    payload: JwtPayload | null
+}
+
 const generateToken = (payload: JwtPayload): string | null => {
 
     try {
@@ -13,19 +23,28 @@ const generateToken = (payload: JwtPayload): string | null => {
 }
 
 
-const verifyToken = (token: string): boolean => {
+const verifyToken = (token: string): VerifyPayload => {
     try {
-        const isTokenValid =  jwt.verify(token, process.env.JWT_SECRET as string)
+        const payload =  jwt.verify(token, process.env.JWT_SECRET as string)
 
-        if(!isTokenValid) {
+        if(!payload) {
             console.log(`token is not valid`)
-            return false;
+            return {
+                status: 1,
+                payload: null
+            };
         }
 
-        return true
+        return {
+            status: 0,
+            payload: payload as JwtPayload
+        }
     } catch (error) {
         console.log(`no token`)
-        return false;
+         return {
+            status: 1,
+            payload: null
+        };
     }
 }
 

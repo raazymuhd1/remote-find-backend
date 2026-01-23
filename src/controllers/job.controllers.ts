@@ -54,10 +54,11 @@ const getAllJobs = async(req: Request, res: Response) => {
         console.log('no jobs found')
         res.status(StatusCodes.NOT_FOUND).json({ data: null, msg: "no jobs found" })
         return
-    } else {
-        res.status(StatusCodes.OK).json({ data: allJobs, msg: `${allJobs.length} jobs found` })
-        return;
-    }
+    } 
+    
+    res.status(StatusCodes.OK).json({ data: allJobs, msg: `${allJobs.length} jobs found` })
+    return;
+    
 }
 
 const getJob = async(req: Request, res: Response) => {

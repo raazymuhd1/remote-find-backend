@@ -8,7 +8,8 @@ const router = express.Router()
 // POST
 router.post("/create-job", asyncHandler(createJob))
 
-
 // GET
 router.get("/get-all-jobs", authenticateAccess, asyncHandler(getAllJobs))
 router.get("/get-job/:jobId", authenticateAccess, asyncHandler(getJob))
+
+export default router;

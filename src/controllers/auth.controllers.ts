@@ -3,6 +3,7 @@ import { prisma } from "../lib/prisma"
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs"
 import { generateToken } from "../helpers";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 
 const signup = async(req: Request, res: Response) => {
     const { username, email, password } = req.body;
@@ -15,25 +16,33 @@ const signup = async(req: Request, res: Response) => {
         return;
     }
     
-    const user = await prisma.user.create({
-        data: {
-            username,
-            email,
-            password: hashedPassword
-        }
-    })
+    try {
 
-    const token = generateToken({
-        userId: user.id,
-        username: user.username,
-        email: user.email
-    })
-    console.log(`new user signed up`, user)
-    res.status(StatusCodes.OK).json({data: {
-        user,
-        token
-    }, msg: "new user signed up"})
-    return;
+        const user = await prisma.user.create({
+            data: {
+                username,
+                email,
+                password: hashedPassword
+            }
+        })
+    
+        const token = generateToken({
+            userId: user.id,
+            username: user.username,
+            email: user.email
+        })
+        console.log(`new user signed up`, user)
+        res.status(StatusCodes.OK).json({data: {
+            user,
+            token
+        }, msg: "new user signed up"})
+        return;
+        
+    } catch (error) {
+        console.log(`something went wrong ${error}`)
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({data: null, msg: error instanceof PrismaClientKnownRequestError ? error?.meta?.driverAdapterError?.cause?.originalMessage : error})
+        return;
+    }
 }
 
 
