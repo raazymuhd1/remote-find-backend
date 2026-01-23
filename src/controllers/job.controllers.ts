@@ -47,12 +47,31 @@ const createJob = async(req: Request, res: Response) => {
     return;
 }
 
-const getAllJobs = async() => {
+const getAllJobs = async(req: Request, res: Response) => {
+    const allJobs = await prisma.job.findMany()
 
+    if(allJobs.length == 0) {
+        console.log('no jobs found')
+        res.status(StatusCodes.NOT_FOUND).json({ data: null, msg: "no jobs found" })
+        return
+    } else {
+        res.status(StatusCodes.OK).json({ data: allJobs, msg: `${allJobs.length} jobs found` })
+        return;
+    }
 }
 
-const getJob = async() => {
+const getJob = async(req: Request, res: Response) => {
+    const { jobId } = req.params;
+    const job = await prisma.job.findFirst({
+        where: { id: Number(jobId) }
+    })
+    
+    if(!job) {
+        res.status(StatusCodes.NOT_FOUND).json({data: null, msg: "no job found"})
+        return
+    }
 
+    res.status(StatusCodes.OK).json({ data: job, msg: `found jobId ${jobId}` })
 }
 
 
