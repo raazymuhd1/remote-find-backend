@@ -17,8 +17,8 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement()) @map("userId")
-  username String @default("John Cena")
-  email String @default("johncena@gmail.com")
+  username String @default("John Cena") @db.VarChar(100)
+  email String @default("johncena@gmail.com") @db.VarChar(100)
   password String 
   picture String @default("my image")
   jobs Job[]

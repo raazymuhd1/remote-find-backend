@@ -13,6 +13,24 @@ const generateToken = (payload: JwtPayload): string | null => {
 }
 
 
+const verifyToken = (token: string): boolean => {
+    try {
+        const isTokenValid =  jwt.verify(token, process.env.JWT_SECRET as string)
+
+        if(!isTokenValid) {
+            console.log(`token is not valid`)
+            return false;
+        }
+
+        return true
+    } catch (error) {
+        console.log(`no token`)
+        return false;
+    }
+}
+
+
 export {
-    generateToken
+    generateToken,
+    verifyToken
 }
