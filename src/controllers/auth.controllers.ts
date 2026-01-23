@@ -13,7 +13,7 @@ const signup = async(req: Request, res: Response) => {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ data: null, msg: "missing required fields" })
         return;
     }
-
+    
     const user = await prisma.user.create({
         data: {
             username,
