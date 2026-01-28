@@ -37,12 +37,18 @@ const createJob = async(req: Request, res: Response) => {
             responsibilities,
             description,
             createdAt: new Date(),
-            detail,
+            detail: {
+                create: {
+                    location: detail?.location,
+                    position: detail?.position,
+                    type: detail?.type,
+                    salaryRange: detail?.salaryRange
+                }
+            },
             authorId: Number(authorId),
         }
     })
 
-    console.log(`createdAt`, new Date())
     res.status(StatusCodes.OK).json({ data: { job, author }, msg: "new job created" })
     return;
 }

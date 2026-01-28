@@ -33,7 +33,7 @@ const getUser = async(req: Request, res: Response) => {
  * @dev getting all users
  */
 const getAllUsers = async(req: Request, res: Response) => {
-    const users = await prisma.user.findMany()
+    const users = await prisma.user.findMany();
 
     try {
         if(users?.length == 0) {

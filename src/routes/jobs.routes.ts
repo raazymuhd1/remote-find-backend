@@ -6,10 +6,10 @@ import { authenticateAccess } from "../middlewares/auth.middlewares"
 const router = express.Router()
 
 // POST
-router.post("/create-job", asyncHandler(createJob))
+router.post("/create", asyncHandler(createJob))
 
 // GET
-router.get("/get-all-jobs", authenticateAccess, asyncHandler(getAllJobs))
+router.get("/get-all", authenticateAccess, asyncHandler(getAllJobs))
 router.get("/get-job/:jobId", authenticateAccess, asyncHandler(getJob))
 
 export default router;

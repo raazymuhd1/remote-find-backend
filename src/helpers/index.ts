@@ -14,7 +14,7 @@ type VerifyPayload = {
 const generateToken = (payload: JwtPayload): string | null => {
 
     try {
-        const token = jwt.sign(payload, process.env.JWT_SECRET as string)
+        const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: "2d" })
         return token;
     } catch (error) {
         console.log(`token generation failed`)
@@ -24,6 +24,7 @@ const generateToken = (payload: JwtPayload): string | null => {
 
 
 const verifyToken = (token: string): VerifyPayload => {
+
     try {
         const payload =  jwt.verify(token, process.env.JWT_SECRET as string)
 
@@ -40,7 +41,6 @@ const verifyToken = (token: string): VerifyPayload => {
             payload: payload as JwtPayload
         }
     } catch (error) {
-        console.log(`no token`)
          return {
             status: 1,
             payload: null

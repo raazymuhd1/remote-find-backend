@@ -37,6 +37,8 @@
     "@types/mongoose": "^5.11.96",
     "@types/morgan": "^1.9.10",
     "@types/multer": "^2.0.0",
+    "@types/passport": "^1.0.17",
+    "@types/passport-google-oidc": "^0.1.0",
     "@types/pg": "^8.16.0",
     "@types/response-time": "^2.3.9",
     "morgan": "^1.10.1",
