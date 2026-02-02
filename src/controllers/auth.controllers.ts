@@ -9,7 +9,7 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 
 const signup = async(req: Request, res: Response) => {
     const { username, email, password } = req.body;
-    const salt = bcrypt.genSaltSync();
+    const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt)
 
     if(!(username || email || password)) {
@@ -19,6 +19,16 @@ const signup = async(req: Request, res: Response) => {
     }
     
     try {
+        const isUserExist = await prisma.user.findFirst({
+            where: {
+                email: { equals: email }
+            }
+        })
+
+        if(isUserExist) {
+            res.status(StatusCodes.FORBIDDEN).json({ data: null, msg: `user with this email ${(email)} is exist` })
+            return;
+        }
 
         const user = await prisma.user.create({
             data: {
@@ -33,11 +43,7 @@ const signup = async(req: Request, res: Response) => {
             username: user.username,
             email: user.email
         })
-        console.log(`new user signed up`, user)
-        res.status(StatusCodes.OK).json({data: {
-            user,
-            token
-        }, msg: "new user signed up"})
+        res.status(StatusCodes.OK).json({user, token, msg: "new user signed up"})
         return;
         
     } catch (error) {
@@ -57,29 +63,35 @@ const signin = async(req: Request, res: Response) => {
             return;
         }
         
-        const user = await prisma.user.findFirst({
-            where: {
-                email
-            }
-        })
-        const correctPassword = bcrypt.compareSync(password, user?.password as string);
-
-         if(user?.email != email || !correctPassword) {
+        try {
+            const user = await prisma.user.findFirst({
+                where: {
+                    email
+                }
+            })
+            const correctPassword = bcrypt.compareSync(password, user?.password as string);
+    
+             if(user?.email != email || !correctPassword) {
+                res.status(StatusCodes.UNAUTHORIZED).json({ data: null, msg: "email or password didn't match" })
+                return;
+             }
+    
+            //  signing a token
+            const token = generateToken({
+                userId: Number(user?.id),
+                username: String(user?.username),
+                email: String(user?.email)
+             })
+     
+             res.status(StatusCodes.OK).json({
+                user,
+                token, msg: "user authenticated" 
+            })
+            
+        } catch (error) {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ data: null, msg: "email or password didn't match" })
             return;
-         }
-
-        //  signing a token
-        const token = generateToken({
-            userId: Number(user?.id),
-            username: String(user?.username),
-            email: String(user?.email)
-         })
- 
-         res.status(StatusCodes.OK).json({ data: {
-            user,
-            token
-         }, msg: "user authenticated", authenticated: true })
+        }
 }
 
 
