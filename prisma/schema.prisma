@@ -21,8 +21,9 @@ model User {
   email String @default("johncena@gmail.com") @db.VarChar(100)
   password String 
   picture String @default("my image")
-  jobs Job[]
-
+  postedjobs Job[]
+  // savedJobs Job[]
+  // appliedJobs Job[]
   @@unique([email])
 }
 
@@ -46,6 +47,6 @@ model Job {
    description String @default("Our company is the best")
    createdAt DateTime @default(now())
    detail JobDetail?
-   author User @relation(fields: [authorId], references: [id])
-   authorId Int @unique
+   author User? @relation(fields: [authorId], references: [id])
+   authorId Int
 }

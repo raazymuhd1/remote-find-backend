@@ -1,12 +1,13 @@
 import express from "express"
 import asyncHandler from "express-async-handler"
-import { createJob, getAllJobs, getJob } from "../controllers/job.controllers"
+import { createJob, getAllJobs, getJob, createJobs } from "../controllers/job.controllers"
 import { authenticateAccess } from "../middlewares/auth.middlewares"
 
 const router = express.Router()
 
 // POST
 router.post("/create", asyncHandler(createJob))
+router.post("/create/jobs", asyncHandler(createJobs))
 
 // GET
 router.get("/get-all", authenticateAccess, asyncHandler(getAllJobs))

@@ -1,6 +1,8 @@
 import { prisma } from "../lib/prisma";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { dummyJobs } from "../dummy-jobs";
+
 
 const createJob = async(req: Request, res: Response) => {
     const { companyName, companyPicture, role, requirements, responsibilities, description, detail } = req.body;
@@ -53,6 +55,43 @@ const createJob = async(req: Request, res: Response) => {
     return;
 }
 
+
+const createJobs = async(req: Request, res: Response) => {
+    const jobs = req.body;
+
+    if(!jobs) {
+         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ data: null, msg: "no jobs were posted" })
+          return;
+    }
+
+    let postedJobs;
+    for(const job of jobs) {
+        postedJobs = await prisma.job.create({
+            data: {
+                   companyName: job?.companyName,
+                   companyPicture: job?.companyPicture,
+                   role: job?.role,
+                   requirements: job?.requirements,
+                   responsibilities: job?.responsibilities,
+                   description: job?.description,
+                    createdAt: new Date(),
+                    detail: {
+                        create: {
+                            location: job?.detail?.location,
+                            position: job?.detail?.position,
+                            type: job?.detail?.type,
+                            salaryRange: job?.detail?.salaryRange
+                        }
+            },
+             authorId: 1,
+            }
+        })
+    }
+
+    res.status(StatusCodes.OK).json({ jobs: postedJobs })
+    return;
+}
+
 const getAllJobs = async(req: Request, res: Response) => {
     const allJobs = await prisma.job.findMany()
 
@@ -84,6 +123,7 @@ const getJob = async(req: Request, res: Response) => {
 
 export { 
     createJob,
+    createJobs,
     getAllJobs,
     getJob
  }

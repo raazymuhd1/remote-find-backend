@@ -15,7 +15,7 @@ const app = express();
 
 app.use(helmet())
 app.use(cors({
-    origin: "https://remote-find101.vercel.app/"
+    origin: "http://localhost:5173"
 }))
 // allowing express accepting body
 app.use(express.json())
