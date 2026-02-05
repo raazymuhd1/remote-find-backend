@@ -103,7 +103,6 @@ const getAllJobs = async(req: Request, res: Response) => {
     
     res.status(StatusCodes.OK).json({ data: allJobs, msg: `${allJobs.length} jobs found` })
     return;
-    
 }
 
 const getJob = async(req: Request, res: Response) => {

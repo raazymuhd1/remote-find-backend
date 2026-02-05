@@ -10,7 +10,7 @@ router.post("/create", asyncHandler(createJob))
 router.post("/create/jobs", asyncHandler(createJobs))
 
 // GET
-router.get("/get-all", authenticateAccess, asyncHandler(getAllJobs))
+router.get("/get-all", asyncHandler(getAllJobs))
 router.get("/get-job/:jobId", authenticateAccess, asyncHandler(getJob))
 
 export default router;
