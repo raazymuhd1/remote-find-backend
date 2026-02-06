@@ -74,6 +74,8 @@ model Post {
 ```shell
 # This command creates the database tables based on your schema.
     npx prisma migrate dev --name init
+    # after made another changes to the prisma schema, to sync with database schema
+    npx prisma migrate dev --name update_name
 
     # Now run the following command to generate the Prisma Client
     npx prisma generate

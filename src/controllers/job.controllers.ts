@@ -29,7 +29,7 @@ const createJob = async(req: Request, res: Response) => {
          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ data: null, msg: "unrecognized author" })
           return;
     }
-
+    
     const job = await prisma.job.create({
         data: {
             companyName,
@@ -100,13 +100,20 @@ const getAllJobs = async(req: Request, res: Response) => {
         res.status(StatusCodes.NOT_FOUND).json({ data: null, msg: "no jobs found" })
         return
     } 
-    
-    res.status(StatusCodes.OK).json({ data: allJobs, msg: `${allJobs.length} jobs found` })
+    console.log('user', req?.user)
+    res.status(StatusCodes.OK).json({ data: allJobs, msg: `${allJobs.length} jobs found`, user: req?.user })
     return;
 }
 
 const getJob = async(req: Request, res: Response) => {
     const { jobId } = req.params;
+
+     if(!jobId) {
+            console.log("missing jobId")
+            res.status(StatusCodes.BAD_REQUEST).json({ data: null, msg: "missing jobId" })
+            return;
+        }
+
     const job = await prisma.job.findFirst({
         where: { id: Number(jobId) }
     })
@@ -116,7 +123,7 @@ const getJob = async(req: Request, res: Response) => {
         return
     }
 
-    res.status(StatusCodes.OK).json({ data: job, msg: `found jobId ${jobId}` })
+    res.status(StatusCodes.OK).json({ data: job, msg: `found jobId ${jobId}`,user: req?.user })
 }
 
 

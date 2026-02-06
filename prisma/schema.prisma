@@ -21,8 +21,10 @@ model User {
   email String @default("johncena@gmail.com") @db.VarChar(100)
   password String 
   picture String? @default("my image")
-  recentJob String? @default("Frontend Developer")
-  workAt String? @default("Apple")
+  recentJob String? @default("Frontend Developer") @db.VarChar(100)
+  workAt String? @default("Apple") @db.VarChar(100)
+  experience String? @default("0 Year") @db.VarChar(100)
+  resident String? @default("Jakarta, Indonesia") @db.VarChar(100)
   postedjobs Job[]
   // savedJobs Job[]
   // appliedJobs Job[]
